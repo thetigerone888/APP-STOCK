@@ -140,3 +140,18 @@ handle that (`if (!db) return [] / throw`).
 - Don't hardcode colors — use the theme system so dark mode isn't broken.
 - Don't introduce a second state-management approach for surveys/responses; extend the
   existing Zustand stores.
+
+## Source of truth & keeping this file current
+
+This file is a navigation aid, not the spec. When it and another doc disagree, the other
+doc wins:
+
+- `design.md` is authoritative for product/UX decisions (screens, flows, brand colors).
+- `server/README.md` is authoritative for backend patterns (auth, DB, tRPC, LLM, storage).
+- `todo.md` is authoritative for feature status.
+- The code itself is always authoritative over any doc, including this one.
+
+Update this file in the same PR whenever you change something it describes — e.g. wiring
+survey/response features to the real backend (the "entirely client-side" note above would
+need to change), adding/renaming top-level directories, or changing a workflow command.
+Treat a stale "Important architectural note" as a bug.
