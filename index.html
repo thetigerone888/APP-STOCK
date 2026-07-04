@@ -65,6 +65,7 @@ function loadApp(){
     var s2=document.createElement("script");s2.src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js";
     s2.onload=function(){
       // React loaded → start app
+      window.useState=React.useState;window.useEffect=React.useEffect;window.useRef=React.useRef;window.useMemo=React.useMemo;
       var s3=document.createElement("script");s3.id="app-js";s3.textContent=document.getElementById("app-src").textContent;
       document.body.appendChild(s3);
     };
