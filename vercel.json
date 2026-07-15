@@ -1,0 +1,13 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "pnpm build:web",
+  "installCommand": "pnpm install",
+  "outputDirectory": "dist",
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/survey/:id/fill", "destination": "/survey/[id]/fill.html" },
+    { "source": "/survey/:id", "destination": "/survey/[id].html" },
+    { "source": "/response/:id", "destination": "/response/[id].html" }
+  ]
+}

@@ -63,3 +63,7 @@ Thumbs.db
 
 # Webdev artifacts (checkpoint zips, migrations, etc.)
 .webdev/
+
+# MARBOHUB POS runtime data (generated on the PHP host, not source)
+marbohub-pos/marbohub_data.json
+marbohub-pos/marbohub_data.lock
