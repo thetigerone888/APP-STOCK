@@ -36,7 +36,7 @@ npx serve dist      # preview the static build
   wire survey/response data to the real backend, this file and `CLAUDE.md`'s "entirely
   client-side" note both need updating, and you'd deploy `server/` separately (e.g. as a
   Vercel serverless function, or its own Node host) with a real `DATABASE_URL`.
-- `metro.config.js` sets `forceWriteFileSystem` to `true` only when `NODE_ENV !== "production"`.
+- `metro.config.js` sets `forceWriteFileSystem` to `true` only when `NODE_ENV === "development"`.
   That NativeWind option (fixes iOS dev styling) previously broke `expo export` because Metro
   hashes the CSS cache file mid-write; keeping it dev-only fixes the export without losing the
   iOS workaround.
