@@ -18,6 +18,12 @@ is currently implemented **entirely client-side** with Zustand + AsyncStorage
 template boilerplate that isn't wired into the survey features yet. Don't assume survey
 data goes through tRPC/the database unless you're the one adding that.
 
+**Unrelated app in this repo:** `marbohub-pos/` (`index.html` + `api.php`) is a separate,
+unrelated single-file POS/stock app — plain HTML/JS talking to a PHP file-backed API. It
+shares no code, stack, or deployment target with FeedbackIQ (see `marbohub-pos/README.md`).
+Don't assume changes to FeedbackIQ's `lib/`/`app/` affect it, or vice versa. See `DEPLOY.md`
+for how each app is deployed.
+
 ## Tech stack
 
 - **Expo (React Native + react-native-web)**, Expo Router (file-based routing), NativeWind
@@ -67,6 +73,9 @@ scripts/                  generate_qr.mjs, load-env.js, reset-project.js
 design.md                Product/design spec (screens, flows, colors)
 todo.md                   Feature checklist
 server/README.md         Detailed backend guide (auth, DB, tRPC, LLM, storage, testing patterns)
+DEPLOY.md                 How to deploy FeedbackIQ (Vercel) and MARBOHUB POS (PHP hosting)
+vercel.json               Vercel build/rewrite config for FeedbackIQ's static web export
+marbohub-pos/             Unrelated single-file POS app (index.html + api.php) — see its README
 ```
 
 ### The `_core/` convention
