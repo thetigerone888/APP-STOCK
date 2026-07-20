@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Guidance for Claude Code (and other AI assistants) working in this repository.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## What this app is
 
@@ -73,9 +73,13 @@ scripts/                  generate_qr.mjs, load-env.js, reset-project.js
 design.md                Product/design spec (screens, flows, colors)
 todo.md                   Feature checklist
 server/README.md         Detailed backend guide (auth, DB, tRPC, LLM, storage, testing patterns)
+README.md                 Duplicate of server/README.md (backend guide) — not a project overview
 DEPLOY.md                 How to deploy FeedbackIQ (Vercel) and MARBOHUB POS (PHP hosting)
 vercel.json               Vercel build/rewrite config for FeedbackIQ's static web export
 marbohub-pos/             Unrelated single-file POS app (index.html + api.php) — see its README
+.github/workflows/        Stock GitHub-suggested workflows (CodeQL, stale bot, Jekyll Pages,
+                          npm-publish samples) — not tailored to this pnpm/Expo project; only
+                          CodeQL meaningfully runs on PRs to main
 ```
 
 ### The `_core/` convention
@@ -95,9 +99,14 @@ pnpm dev:server         # tRPC/Express server only (tsx watch)
 pnpm check              # tsc --noEmit — run after any nontrivial change
 pnpm lint               # expo lint (eslint-config-expo)
 pnpm format             # prettier --write .
-pnpm test               # vitest run
+pnpm test               # vitest run (all tests)
+pnpm test tests/analytics.test.ts        # run a single test file
+pnpm vitest run -t "calculateNPS"        # run tests matching a name
 pnpm db:push            # drizzle-kit generate && drizzle-kit migrate (only if schema.ts changed)
 pnpm android / pnpm ios  # native builds via Expo
+pnpm build:web          # expo export --platform web → dist/ (what Vercel deploys, see DEPLOY.md)
+pnpm build && pnpm start # bundle the Express/tRPC server (esbuild → dist/) and run it
+pnpm qr "exps://..."     # write expo-qr-code.png for a given URL (scripts/generate_qr.mjs)
 ```
 
 There is no backend database configured by default for local dev — `getDb()` in
