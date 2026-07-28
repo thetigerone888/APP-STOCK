@@ -91,7 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'addOrder') {
 // ===== คืนสินค้า (atomic) =====
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'returnOrder') {
     $body = json_decode(file_get_contents('php://input'), true);
-    if (!$body || !isset($body['orderId'])) { http_response_code(400); echo json_encode(['error'=>'invalid body']); exit; }
+    if (!$body) { http_response_code(400); echo json_encode(['error'=>'invalid JSON body']); exit; }
+    if (!isset($body['orderId'])) { http_response_code(400); echo json_encode(['error'=>'missing required field: orderId']); exit; }
     $fp = fopen(LOCK_FILE, 'w');
     flock($fp, LOCK_EX);
     $data = loadData();
