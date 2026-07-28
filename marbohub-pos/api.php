@@ -95,22 +95,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'returnOrder') {
     $fp = fopen(LOCK_FILE, 'w');
     flock($fp, LOCK_EX);
     $data = loadData();
+    $found = false;
     // อัปเดตสถานะออเดอร์
     foreach ($data['orders'] as &$order) {
-        if ($order['id'] === $body['orderId'] && $order['status'] === 'paid') {
+        if ($order['id'] === $body['orderId']) {
+            if ($order['status'] !== 'paid') {
+                flock($fp, LOCK_UN); fclose($fp);
+                http_response_code(409);
+                echo json_encode(['error'=>'order status is not paid, cannot return']);
+                exit;
+            }
             $order['status'] = 'return';
             $order['returned'] = ['ts' => round(microtime(true) * 1000)];
-            // คืนสต๊อก
+            // คืนสต๊อก (เฉพาะสินค้าที่มีค่าใน stockOv แล้ว)
             if (isset($body['stockAdds'])) {
                 foreach ($body['stockAdds'] as $pid => $qty) {
                     $cur = $data['stockOv'][$pid] ?? null;
                     if ($cur !== null) $data['stockOv'][$pid] = $cur + $qty;
                 }
             }
+            $found = true;
             break;
         }
     }
     unset($order);
+    if (!$found) {
+        flock($fp, LOCK_UN); fclose($fp);
+        http_response_code(404);
+        echo json_encode(['error'=>'order not found']);
+        exit;
+    }
     $data['v'] = ($data['v'] ?? 0) + 1;
     $data['ts'] = round(microtime(true) * 1000);
     file_put_contents(DATA_FILE, json_encode($data, JSON_UNESCAPED_UNICODE));
