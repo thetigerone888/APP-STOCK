@@ -88,5 +88,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'addOrder') {
     exit;
 }
 
+// ===== คืนสินค้า (atomic) =====
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'returnOrder') {
+    $body = json_decode(file_get_contents('php://input'), true);
+    if (!$body || !isset($body['orderId'])) { http_response_code(400); echo json_encode(['error'=>'invalid body']); exit; }
+    $fp = fopen(LOCK_FILE, 'w');
+    flock($fp, LOCK_EX);
+    $data = loadData();
+    // อัปเดตสถานะออเดอร์
+    foreach ($data['orders'] as &$order) {
+        if ($order['id'] === $body['orderId'] && $order['status'] === 'paid') {
+            $order['status'] = 'return';
+            $order['returned'] = ['ts' => round(microtime(true) * 1000)];
+            // คืนสต๊อก
+            if (isset($body['stockAdds'])) {
+                foreach ($body['stockAdds'] as $pid => $qty) {
+                    $cur = $data['stockOv'][$pid] ?? null;
+                    if ($cur !== null) $data['stockOv'][$pid] = $cur + $qty;
+                }
+            }
+            break;
+        }
+    }
+    unset($order);
+    $data['v'] = ($data['v'] ?? 0) + 1;
+    $data['ts'] = round(microtime(true) * 1000);
+    file_put_contents(DATA_FILE, json_encode($data, JSON_UNESCAPED_UNICODE));
+    flock($fp, LOCK_UN); fclose($fp);
+    echo json_encode(['ok'=>true, 'v'=>$data['v']]);
+    exit;
+}
+
 http_response_code(400);
 echo json_encode(['error'=>'unknown action: ' . $action]);
