@@ -1,6 +1,6 @@
 # Deploying the apps in this repo
 
-This repo contains **two unrelated apps**. They deploy to different places.
+This repo contains **three unrelated apps**. They deploy to different places.
 
 ## FeedbackIQ (`app/`, `lib/`, `server/`, ...)
 
@@ -47,3 +47,19 @@ A separate single-file POS/stock app (`index.html` + `api.php`), unrelated to Fe
 needs PHP shared hosting, not Vercel. See `marbohub-pos/README.md` for deploy steps and
 security caveats (PIN is hardcoded, `.htaccess` blocks direct access to the data file on
 Apache hosts).
+
+## Tiger88 Expense System (`tiger88/`)
+
+A separate PHP + MySQL expense-tracking app (Thai UI, "เสือกินเส้น 88") for
+[thetiger.one](https://thetiger.one), unrelated to the other two apps. It runs on cPanel
+shared hosting (PHP + MySQL/phpMyAdmin, deployed via File Manager upload) and syncs new
+expense rows daily from a published Google Sheet ("Paypers") via a cron-triggered
+`sync.php`. Full step-by-step deploy instructions are in `tiger88/README_DEPLOY.md`.
+
+Because this repo is public, the committed copy is sanitized:
+
+- `tiger88/config.php` contains `CHANGE_ME_*` placeholders — real DB credentials, the
+  login password hash, the sync secret key, and the Paypers sheet URL must be filled in
+  before upload (kept privately, outside git).
+- `tiger88/seed_data.json` (real expense records used by `seed_import.php` for the one-time
+  initial import) is intentionally **not committed** (see `tiger88/.gitignore`).

@@ -18,11 +18,19 @@ is currently implemented **entirely client-side** with Zustand + AsyncStorage
 template boilerplate that isn't wired into the survey features yet. Don't assume survey
 data goes through tRPC/the database unless you're the one adding that.
 
-**Unrelated app in this repo:** `marbohub-pos/` (`index.html` + `api.php`) is a separate,
-unrelated single-file POS/stock app — plain HTML/JS talking to a PHP file-backed API. It
-shares no code, stack, or deployment target with FeedbackIQ (see `marbohub-pos/README.md`).
-Don't assume changes to FeedbackIQ's `lib/`/`app/` affect it, or vice versa. See `DEPLOY.md`
-for how each app is deployed.
+**Unrelated apps in this repo:**
+
+- `marbohub-pos/` (`index.html` + `api.php`) is a separate, unrelated single-file POS/stock
+  app — plain HTML/JS talking to a PHP file-backed API (see `marbohub-pos/README.md`).
+- `tiger88/` is a separate, unrelated PHP + MySQL expense-tracking app (Thai UI) deployed
+  to thetiger.one on cPanel shared hosting, with daily sync from a published Google Sheet
+  (see `tiger88/README_DEPLOY.md`). The committed `tiger88/config.php` holds `CHANGE_ME_*`
+  placeholders (this repo is public — never commit real credentials into it), and
+  `tiger88/seed_data.json` (real expense data) is gitignored on purpose.
+
+Neither shares code, stack, or deployment target with FeedbackIQ. Don't assume changes to
+FeedbackIQ's `lib/`/`app/` affect them, or vice versa. See `DEPLOY.md` for how each app is
+deployed.
 
 ## Tech stack
 
@@ -76,6 +84,7 @@ server/README.md         Detailed backend guide (auth, DB, tRPC, LLM, storage, t
 DEPLOY.md                 How to deploy FeedbackIQ (Vercel) and MARBOHUB POS (PHP hosting)
 vercel.json               Vercel build/rewrite config for FeedbackIQ's static web export
 marbohub-pos/             Unrelated single-file POS app (index.html + api.php) — see its README
+tiger88/                  Unrelated PHP+MySQL expense app for thetiger.one — see its README_DEPLOY.md
 ```
 
 ### The `_core/` convention
