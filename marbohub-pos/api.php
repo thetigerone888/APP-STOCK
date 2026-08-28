@@ -88,5 +88,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'addOrder') {
     exit;
 }
 
+// ===== คืนสินค้า (atomic) =====
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'returnOrder') {
+    $body = json_decode(file_get_contents('php://input'), true);
+    if (!$body) { http_response_code(400); echo json_encode(['error'=>'invalid JSON body']); exit; }
+    if (!isset($body['orderId'])) { http_response_code(400); echo json_encode(['error'=>'missing required field: orderId']); exit; }
+    $fp = fopen(LOCK_FILE, 'w');
+    flock($fp, LOCK_EX);
+    $data = loadData();
+    $found = false;
+    // อัปเดตสถานะออเดอร์
+    foreach ($data['orders'] as &$order) {
+        if ($order['id'] === $body['orderId']) {
+            if ($order['status'] !== 'paid') {
+                flock($fp, LOCK_UN); fclose($fp);
+                http_response_code(409);
+                echo json_encode(['error'=>'order status is not paid, cannot return']);
+                exit;
+            }
+            $order['status'] = 'return';
+            $order['returned'] = ['ts' => round(microtime(true) * 1000)];
+            // คืนสต๊อก (เฉพาะสินค้าที่มีค่าใน stockOv แล้ว)
+            if (isset($body['stockAdds'])) {
+                foreach ($body['stockAdds'] as $pid => $qty) {
+                    $cur = $data['stockOv'][$pid] ?? null;
+                    if ($cur !== null) $data['stockOv'][$pid] = $cur + $qty;
+                }
+            }
+            $found = true;
+            break;
+        }
+    }
+    unset($order);
+    if (!$found) {
+        flock($fp, LOCK_UN); fclose($fp);
+        http_response_code(404);
+        echo json_encode(['error'=>'order not found']);
+        exit;
+    }
+    $data['v'] = ($data['v'] ?? 0) + 1;
+    $data['ts'] = round(microtime(true) * 1000);
+    file_put_contents(DATA_FILE, json_encode($data, JSON_UNESCAPED_UNICODE));
+    flock($fp, LOCK_UN); fclose($fp);
+    echo json_encode(['ok'=>true, 'v'=>$data['v']]);
+    exit;
+}
+
 http_response_code(400);
 echo json_encode(['error'=>'unknown action: ' . $action]);
