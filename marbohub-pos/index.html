@@ -64,7 +64,8 @@ function loadApp(){
   s.onload=function(){
     var s2=document.createElement("script");s2.src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js";
     s2.onload=function(){
-      // React loaded → start app
+      // React loaded → expose hooks as globals so bundled app code can call them directly
+      Object.assign(window,React);
       var s3=document.createElement("script");s3.id="app-js";s3.textContent=document.getElementById("app-src").textContent;
       document.body.appendChild(s3);
     };
