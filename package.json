@@ -29,7 +29,7 @@
     "@trpc/client": "11.7.2",
     "@trpc/react-query": "11.7.2",
     "@trpc/server": "11.8.0",
-    "axios": "^1.16.0",
+    "axios": "^1.20.0",
     "clsx": "^2.1.1",
     "cookie": "^1.1.1",
     "dotenv": "^16.6.1",
@@ -55,7 +55,7 @@
     "expo-web-browser": "~15.0.10",
     "express": "^4.22.1",
     "jose": "6.1.0",
-    "mysql2": "^3.16.0",
+    "mysql2": "^3.23.1",
     "nativewind": "^4.2.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
@@ -82,7 +82,7 @@
     "concurrently": "^9.2.1",
     "cross-env": "^7.0.3",
     "drizzle-kit": "^0.31.8",
-    "esbuild": "^0.28.1",
+    "esbuild": "^0.28.2",
     "eslint": "^9.39.2",
     "eslint-config-expo": "~10.0.0",
     "prettier": "^3.7.4",
@@ -90,7 +90,7 @@
     "tailwindcss": "^3.4.17",
     "tsx": "^4.21.0",
     "typescript": "~5.9.3",
-    "vitest": "^3.2.6"
+    "vitest": "^5.0.5"
   },
   "packageManager": "pnpm@9.12.0"
 }
